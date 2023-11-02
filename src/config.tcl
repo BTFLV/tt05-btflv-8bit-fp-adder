@@ -8,6 +8,8 @@
 
 # If you get stuck with this config, please open an issue or get in touch via the discord.
 
+set ::env(SYNTH_STRATEGY) {DELAY 4}
+
 # Here are some of the variables you may want to change:
 
 # PL_TARGET_DENSITY - You can increase this if Global Placement fails with error GPL-0302.
