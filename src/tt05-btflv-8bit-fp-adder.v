@@ -1,4 +1,4 @@
-module btflv_8bit_fp_adder (
+module tt_um_btflv_8bit_fp_adder (
     input  wire [7:0] ui_in,
     output reg  [7:0] uo_out,
     input  wire [7:0] uio_in,
