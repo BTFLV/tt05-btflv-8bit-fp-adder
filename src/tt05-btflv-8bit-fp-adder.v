@@ -37,42 +37,42 @@ always @(posedge clk)
 begin
 	if (a_expo > b_expo)
 	begin
-		l_expo = a_expo;
-		s_expo = b_expo;
-		l_mant = a_mant;
-		s_mant = b_mant >> (l_expo - s_expo);
-		o_sign = a_sign;
+		l_expo <= a_expo;
+		s_expo <= b_expo;
+		l_mant <= a_mant;
+		s_mant <= b_mant >> (l_expo - s_expo);
+		o_sign <= a_sign;
 	end
 	else if (a_expo < b_expo)
 	begin
-		l_expo = b_expo;
-		s_expo = a_expo;
-		l_mant = b_mant;
-		s_mant = a_mant >> (l_expo - s_expo);
-		o_sign = b_sign;
+		l_expo <= b_expo;
+		s_expo <= a_expo;
+		l_mant <= b_mant;
+		s_mant <= a_mant >> (l_expo - s_expo);
+		o_sign <= b_sign;
 	end
 	else
 	begin
 		if(a_mant > b_mant)
 		begin
-			l_expo = a_expo;
-			s_expo = b_expo;
-			l_mant = a_mant;
-			s_mant = b_mant;
-			o_sign = a_sign;
+			l_expo <= a_expo;
+			s_expo <= b_expo;
+			l_mant <= a_mant;
+			s_mant <= b_mant;
+			o_sign <= a_sign;
 		end
 		else
 		begin
-			l_expo = b_expo;
-			s_expo = a_expo;
-			l_mant = b_mant;
-			s_mant = a_mant;
-			o_sign = b_sign;
+			l_expo <= b_expo;
+			s_expo <= a_expo;
+			l_mant <= b_mant;
+			s_mant <= a_mant;
+			o_sign <= b_sign;
 		end
 	end
 	
-	c_mant = (a_sign ^ b_sign) ? l_mant - s_mant : l_mant + s_mant;
-	g_mant = c_mant + 5;
+	c_mant <= (a_sign ^ b_sign) ? l_mant - s_mant : l_mant + s_mant;
+	g_mant <= c_mant + 5;
 	
 	if (c_mant[3])
 	begin
@@ -80,35 +80,35 @@ begin
 		begin
 			if (o_expo < 4'b1101)
 			begin
-				o_mant = g_mant[4:2];
-				o_expo = l_expo + 2;
+				o_mant <= g_mant[4:2];
+				o_expo <= l_expo + 2;
 			end
 			else
 			begin
-				o_mant = 3'b000;
-				o_expo = 4'b1111;
+				o_mant <= 3'b000;
+				o_expo <= 4'b1111;
 			end
 		end
 		else
 		begin
 			if (o_expo < 4'b1110)
 			begin
-				o_mant = g_mant[3:1];
-				o_expo = l_expo + 1;
+				o_mant <= g_mant[3:1];
+				o_expo <= l_expo + 1;
 			end
 			else
 			begin
-				o_mant = 3'b000;
-				o_expo = 4'b1111;
+				o_mant <= 3'b000;
+				o_expo <= 4'b1111;
 			end
-			o_mant = c_mant[2:0];
-			o_expo = l_expo;
+			o_mant <= c_mant[2:0];
+			o_expo <= l_expo;
 		end
 	end
 	else
 	begin
-		o_mant = c_mant[2:0];
-		o_expo = l_expo;
+		o_mant <= c_mant[2:0];
+		o_expo <= l_expo;
 	end
 end
 
