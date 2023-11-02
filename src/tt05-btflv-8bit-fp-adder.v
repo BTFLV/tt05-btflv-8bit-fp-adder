@@ -1,6 +1,6 @@
 module tt_um_btflv_8bit_fp_adder (
     input  wire [7:0] ui_in,
-    output reg  [7:0] uo_out,
+    output wire [7:0] uo_out,
     input  wire [7:0] uio_in,
     output wire [7:0] uio_out,  
     output wire [7:0] uio_oe,   
@@ -25,6 +25,7 @@ reg [4:0] g_mant;
 reg [3:0] o_expo;
 reg [2:0] o_mant;
 reg       o_sign;
+reg [7:0] o_floa;
 
 assign a_sign = ui_in[7];
 assign b_sign = uio_in[7];
@@ -32,6 +33,8 @@ assign a_expo = ui_in[6:3];
 assign b_expo = uio_in[6:3];
 assign a_mant = ui_in[2:0];
 assign b_mant = uio_in[2:0];
+
+assign uo_out = o_floa;
 
 always @*
 begin
@@ -114,16 +117,20 @@ end
 
 always @(posedge clk)
 begin
-    if (rst_n)
-	 begin
-        uo_out <= 8'd0;
-    end
-    else if (ena)
-	 begin
-        uo_out[6:3] <= o_expo;
-		  uo_out[2:0] <= o_mant;
-		  uo_out[7]   <= o_sign;
-    end
+	if (rst_n)
+	begin
+		o_floa <= 8'd0;
+	end
+	else if (ena)
+	begin
+		o_floa[6:3] <= o_expo;
+		o_floa[2:0] <= o_mant;
+		o_floa[7]   <= o_sign;
+	end
+	else
+	begin
+		o_floa <= 8'd0;
+	end
 end
 
 endmodule
