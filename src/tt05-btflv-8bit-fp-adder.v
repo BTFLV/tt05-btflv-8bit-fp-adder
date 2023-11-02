@@ -83,7 +83,7 @@ begin
 	begin
 		if (g_mant[4])
 		begin
-			if (o_expo < 4'b1101)
+			if (g_mant < 4'b1101)
 			begin
 				o_mant = g_mant[4:2];
 				o_expo = l_expo + 2;
@@ -96,7 +96,7 @@ begin
 		end
 		else
 		begin
-			if (o_expo < 4'b1110)
+			if (g_mant < 4'b1110)
 			begin
 				o_mant = g_mant[3:1];
 				o_expo = l_expo + 1;
