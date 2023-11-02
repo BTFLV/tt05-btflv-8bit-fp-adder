@@ -33,7 +33,7 @@ assign b_expo = uio_in[6:3];
 assign a_mant = ui_in[2:0];
 assign b_mant = uio_in[2:0];
 
-always @*
+always @(posedge clk)
 begin
 	if (a_expo > b_expo)
 	begin
@@ -112,7 +112,8 @@ begin
 	end
 end
 
-always @(posedge clk) begin
+always @(posedge clk)
+begin
     if (rst_n)
 	 begin
         uo_out <= 8'd0;
