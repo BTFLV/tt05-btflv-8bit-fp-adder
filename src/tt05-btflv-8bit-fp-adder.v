@@ -140,7 +140,7 @@ end
 
 always @(posedge clk)
 begin
-	if (rst_n)
+	if (!rst_n)
 	begin
 		o_floa <= 8'd0;
 	end
