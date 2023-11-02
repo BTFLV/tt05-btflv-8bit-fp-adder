@@ -10,6 +10,7 @@ module tt_um_btflv_8bit_fp_adder (
 );
 
 assign uio_oe = 8'b00000000;
+assign uio_out = 8'b00000000;
 
 wire       a_sign;
 wire       b_sign;
