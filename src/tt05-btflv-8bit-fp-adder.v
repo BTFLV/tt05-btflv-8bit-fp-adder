@@ -16,15 +16,15 @@ wire       a_sign;
 wire       b_sign;
 wire [3:0] a_expo;
 wire [3:0] b_expo;
-wire [2:0] a_mant;
-wire [2:0] b_mant;
+wire [3:0] a_mant;
+wire [3:0] b_mant;
 
 reg [3:0] l_expo;
 reg [3:0] s_expo;
-reg [2:0] l_mant;
-reg [2:0] s_mant;
-reg [3:0] c_mant;
-reg [4:0] g_mant;
+reg [3:0] l_mant;
+reg [3:0] s_mant;
+reg [4:0] c_mant;
+reg [5:0] g_mant;
 reg [3:0] o_expo;
 reg [2:0] o_mant;
 reg       o_sign;
@@ -34,8 +34,10 @@ assign a_sign = ui_in[7];
 assign b_sign = uio_in[7];
 assign a_expo = ui_in[6:3];
 assign b_expo = uio_in[6:3];
-assign a_mant = ui_in[2:0];
-assign b_mant = uio_in[2:0];
+assign a_mant[2:0] = ui_in[2:0];
+assign b_mant[2:0] = uio_in[2:0];
+assign a_mant[3] = 1'b1;
+assign b_mant[3] = 1'b1;
 
 assign uo_out = o_floa;
 
@@ -77,14 +79,14 @@ begin
 		end
 	end
 	
-	c_mant = (a_sign ^ b_sign) ? l_mant - s_mant : l_mant + s_mant;
-	g_mant = c_mant + 5;
+	c_mant = (a_sign ^ b_sign) ? (l_mant - s_mant) : (l_mant + s_mant);
+	g_mant = c_mant + 1;
 	
-	if (c_mant[3])
+	if (c_mant[4] || g_mant[5])
 	begin
-		if (g_mant[4])
+		if (g_mant[5])
 		begin
-			if (g_mant < 4'b1101)
+			if (l_expo < 4'b1101)
 			begin
 				o_mant = g_mant[4:2];
 				o_expo = l_expo + 2;
@@ -97,7 +99,7 @@ begin
 		end
 		else
 		begin
-			if (g_mant < 4'b1110)
+			if (l_expo < 4'b1110)
 			begin
 				o_mant = g_mant[3:1];
 				o_expo = l_expo + 1;
@@ -107,14 +109,32 @@ begin
 				o_mant = 3'b000;
 				o_expo = 4'b1111;
 			end
-			o_mant = c_mant[2:0];
-			o_expo = l_expo;
 		end
 	end
-	else
+	else if (c_mant[3])
 	begin
 		o_mant = c_mant[2:0];
 		o_expo = l_expo;
+	end
+	else if (c_mant[2])
+	begin
+		o_mant = c_mant[2:0] << 1;
+		o_expo = l_expo - 1;
+	end
+	else if (c_mant[1])
+	begin
+		o_mant = c_mant[2:0] << 2;
+		o_expo = l_expo - 2;
+	end
+	else if (c_mant[0])
+	begin
+		o_mant = c_mant[2:0] << 3;
+		o_expo = l_expo - 3;
+	end
+	else
+	begin
+		o_mant = 3'b000;
+		o_expo = 4'b0000;
 	end
 end
 
@@ -123,6 +143,17 @@ begin
 	if (rst_n)
 	begin
 		o_floa <= 8'd0;
+	end
+	else if (a_expo == 4'b1111 || b_expo == 4'b1111)
+	begin
+		if (a_mant[2:0] != 3'b000 || b_mant[2:0] != 3'b000)
+		begin
+			o_floa[7:0] <= 8'b01111000;
+		end
+		else
+		begin
+			o_floa[7:0] <= 8'b01111111;
+		end
 	end
 	else if (ena)
 	begin
