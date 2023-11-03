@@ -18,6 +18,7 @@ wire [3:0] a_expo;
 wire [3:0] b_expo;
 wire [3:0] a_mant;
 wire [3:0] b_mant;
+wire       x_sign;
 
 reg [3:0] l_expo;
 reg [3:0] s_expo;
@@ -40,21 +41,19 @@ assign a_mant[3] = 1'b1;
 assign b_mant[3] = 1'b1;
 assign a_mant[3] = 1'b1;
 assign b_mant[3] = 1'b1;
+assign x_sign    = a_sign ^ b_sign;
 
 assign uo_out = o_floa;
 
 always @*
-begin
-	l_mant[2:0] = 3'b100;
-	s_mant[2:0] = 3'b100;
-	c_mant[8] = 1'b0;
-	
+begin	
 	if (a_expo > b_expo)
 	begin
 		l_expo = a_expo;
 		s_expo = b_expo;
 		l_mant[6:3] = a_mant;
-		s_mant = ((b_mant << 3) + 3'b100) >> (l_expo - s_expo);
+		l_mant[2:0] = 3'b000;
+		s_mant = ((b_mant << 3) + ((x_sign) ? 3'b000 : 3'b100)) >> (l_expo - s_expo);
 		o_sign = a_sign;
 	end
 	else if (a_expo < b_expo)
@@ -62,11 +61,23 @@ begin
 		l_expo = b_expo;
 		s_expo = a_expo;
 		l_mant[6:3] = b_mant;
-		s_mant = ((a_mant << 3) + 3'b100) >> (l_expo - s_expo);
+		l_mant[2:0] = 3'b000;
+		s_mant = ((a_mant << 3) + ((x_sign) ? 3'b000 : 3'b100)) >> (l_expo - s_expo);
 		o_sign = b_sign;
 	end
 	else
 	begin
+		if (x_sign)
+		begin
+			l_mant[2:0] = 3'b000;
+			s_mant[2:0] = 3'b000;
+		end
+		else
+		begin
+			l_mant[2:0] = 3'b100;
+			s_mant[2:0] = 3'b100;
+		end
+		
 		if(a_mant > b_mant)
 		begin
 			l_expo = a_expo;
@@ -85,14 +96,7 @@ begin
 		end
 	end
 	
-	if(a_mant > b_mant)
-	begin
-	end
-	else
-	begin
-	end
-	
-	if(a_sign ^ b_sign)
+	if(x_sign)
 	begin
 		c_mant = (l_mant > s_mant) ? l_mant - s_mant : s_mant - l_mant;
 	end
@@ -101,7 +105,7 @@ begin
 		c_mant = l_mant + s_mant;
 	end
 	
-	if ((c_mant[7] || c_mant[8]) && !(a_sign ^ b_sign))
+	if ((c_mant[7] || c_mant[8]) && !x_sign)
 	begin
 		if (c_mant[8])
 		begin
@@ -174,6 +178,7 @@ begin
 	end
 	else
 	begin
+		//o_floa = c_mant[7:0];
 		o_floa[6:3] <= o_expo;
 		o_floa[2:0] <= o_mant;
 		o_floa[7]   <= o_sign;
