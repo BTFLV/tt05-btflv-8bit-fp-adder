@@ -9,7 +9,7 @@ TOPLEVEL_LANG ?= verilog
 ifneq ($(GATES),yes)
 
 # this is the only part you should need to modify:
-VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/btflv_8bit_fp_adder.v
+VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/tt05-btflv-8bit-fp-adder.v
 
 else
 

@@ -1,20 +1,11 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg)
 
-# 8 Bit Floating Point Adder for Tiny Tapeout 05
+# 8 bit floating point adder for Tiny Tapeout 05
 
-TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip.
+8 bit floating point adder for the SkyWater SKY130 130nm node. Made possible by https://tinytapeout.com.
 
-To learn more and get started, visit https://tinytapeout.com.
-
-## How it works
-
-Adds 2 8 Bit Floating Point Numbers under consideration of rounding and infinity cases.
-The two Floats use the 8 Bit Input and the 8 Bit bidirectional Input.
-1 Bit Sign, 4 Bit Exponent, 3 Bit Mantissa.
-
-## How to test
-
-Every clock the output should give the Addition of the two Floats.
+Adds 2 8 bit floating point numbers under consideration of rounding and infinity cases.
+1 bit sign, 4 bit exponent, 3 bit mantissa.
 
 ## Pins
 
@@ -73,4 +64,4 @@ Every clock the output should give the Addition of the two Floats.
 
 ## Notes
 
-I read about Tinytapeout 3 Days before Tapeout 05, so this was done in 2 nights. The code is far from perfect and maybe there are some bugs. But i wanted to test a Tapeout before developing a Risc V MCU for Tapeout 06.
+I read about Tinytapeout 3 days before Tapeout 05, so this was done in 2 nights. The code is far from perfect and maybe there are some bugs. But i wanted to test a tapeout before developing a Risc V MCU for Tapeout 06.

@@ -21,51 +21,51 @@ yaml_version: 4
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
   author:       "Philip Mohr"      # Your name
-  title:        "8 Bit Floating Point Adder for Tiny Tapeout 05"      # Project title
+  title:        "8 bit floating point adder for Tiny Tapeout 05"      # Project title
   language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  "Adds 2 8 Bit Floating Point Numbers under consideration of rounding and infinity cases"      # Short description of what your project does
+  description:  "Adds 2 8 Bit floating point numbers under consideration of rounding and infinity cases"      # Short description of what your project does
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Adds 2 8 Bit Floating Point Numbers under consideration of rounding and infinity cases.
-      The two Floats use the 8 Bit Input and the 8 Bit bidirectional Input.
-      1 Bit Sign, 4 Bit Exponent, 3 Bit Mantissa.
+      Adds 2 8 bit floating point numbers under consideration of rounding and infinity cases.
+      The two floats use the 8 bit input and the 8 bit bidirectional input.
+      1 bit sign, 4 bit exponent, 3 bit mantissa.
 
-      (I read about Tinytapeout 3 Days before Tapeout 05, so this was done in 2 nights. The code is far from perfect and maybe there are some bugs. But i wanted to test a Tapeout before developing a Risc V MCU for Tapeout 06.)
+      (I read about Tinytapeout 3 days before Tapeout 05, so this was done in 2 nights. The code is far from perfect and maybe there are some edge case bugs. But i wanted to test a tapeout before developing a Risc V MCU for Tapeout 06.)
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Every clock the output should give the Addition of the two Floats.
+      Every clock the output should give the addition of the two floats.
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
-    - Float a Mantissa[0]
-    - Float a Mantissa[1]
-    - Float a Mantissa[2]
-    - Float a Exponent[0]
-    - Float a Exponent[1]
-    - Float a Exponent[2]
-    - Float a Exponent[3]
+    - Float a Mant[0]
+    - Float a Mant[1]
+    - Float a Mant[2]
+    - Float a Exp[0]
+    - Float a Exp[1]
+    - Float a Exp[2]
+    - Float a Exp[3]
     - Float a Sign
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - Float out Mantissa[0]
-    - Float out Mantissa[1]
-    - Float out Mantissa[2]
-    - Float out Exponent[0]
-    - Float out Exponent[1]
-    - Float out Exponent[2]
-    - Float out Exponent[3]
+    - Float out Mant[0]
+    - Float out Mant[1]
+    - Float out Mant[2]
+    - Float out Exp[0]
+    - Float out Exp[1]
+    - Float out Exp[2]
+    - Float out Exp[3]
     - Float out Sign
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
-    - Float b Mantissa[0]
-    - Float b Mantissa[1]
-    - Float b Mantissa[2]
-    - Float b Exponent[0]
-    - Float b Exponent[1]
-    - Float b Exponent[2]
-    - Float b Exponent[3]
+    - Float b Mant[0]
+    - Float b Mant[1]
+    - Float b Mant[2]
+    - Float b Exp[0]
+    - Float b Exp[1]
+    - Float b Exp[2]
+    - Float b Exp[3]
     - Float b Sign
 
 # The following fields are optional
@@ -74,4 +74,4 @@ documentation:
   discord:      "philipmohr"      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
   clock_hz:            # Clock frequency in Hz (if required)
-  picture:      ""      # relative path to a picture in your repository (must be 512kb or less)
+  picture:      "btflv-8bit-fp-adder.png"      # relative path to a picture in your repository (must be 512kb or less)
