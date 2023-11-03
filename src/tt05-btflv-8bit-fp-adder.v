@@ -90,7 +90,7 @@ begin
 	
 	if(a_sign ^ b_sign)
 	begin
-		c_mant = (l_mant > s_mant) ? l_mant - s_mant  + 3'b100 : s_mant - l_mant  + 3'b100;
+		c_mant = (l_mant > s_mant) ? l_mant - s_mant : s_mant - l_mant;
 	end
 	else
 	begin
