@@ -1,36 +1,76 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg)
 
-# What is Tiny Tapeout?
+# 8 Bit Floating Point Adder for Tiny Tapeout 05
 
 TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip.
 
 To learn more and get started, visit https://tinytapeout.com.
 
-## Verilog Projects
+## How it works
 
-Edit the [info.yaml](info.yaml) and uncomment the `source_files` and `top_module` properties, and change the value of `language` to "Verilog". Add your Verilog files to the `src` folder, and list them in the `source_files` property.
+Adds 2 8 Bit Floating Point Numbers under consideration of rounding and infinity cases.
+The two Floats use the 8 Bit Input and the 8 Bit bidirectional Input.
+1 Bit Sign, 4 Bit Exponent, 3 Bit Mantissa.
 
-The GitHub action will automatically build the ASIC files using [OpenLane](https://www.zerotoasiccourse.com/terminology/openlane/).
+## How to test
 
-## How to enable the GitHub actions to build the ASIC files
+Every clock the output should give the Addition of the two Floats.
 
-Please see the instructions for:
+## Pins
 
-- [Enabling GitHub Actions](https://tinytapeout.com/faq/#when-i-commit-my-change-the-gds-action-isnt-running)
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
+### inputs:               
+  - a_sign[1]   = ui_in[7]
+  - a_expo[3:0] = ui_in[6:3]
+  - a_mant[2:0] = ui_in[2:0]
 
-## Resources
+### outputs:
+  - uo_out[7]   = sign
+  - uo_out[2:0] = mant
+  - uo_out[6:3] = expo
 
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://discord.gg/rPK2nSjxy8)
+### bidirectional:
+  - b_sign[1]   = uio_in[7]
+  - b_expo[3:0] = uio_in[6:3]
+  - b_mant[2:0] = uio_in[2:0]
 
-## What next?
+## 8 Bit Float Chart
 
-- Submit your design to the next shuttle [on the website](https://tinytapeout.com/#submit-your-design). The closing date is **November 4th**.
-- Edit this [README](README.md) and explain your design, how it works, and how to test it.
-- Share your GDS on your social network of choice, tagging it #tinytapeout and linking Matt's profile:
-  - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [matt-venn](https://www.linkedin.com/in/matt-venn/)
-  - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
-  - Twitter [#tinytapeout](https://twitter.com/hashtag/tinytapeout?src=hashtag_click) [@matthewvenn](https://twitter.com/matthewvenn)
+|              | **… 000** | **… 001**    | **… 010**   | **… 011**    | **… 100**  | **… 101**    | **… 110**   | **… 111**    |
+|-------------:|----------:|-------------:|------------:|-------------:|-----------:|-------------:|------------:|-------------:|
+| **0 0000 …** | 0         | 0.001953125  | 0.00390625  | 0.005859375  | 0.0078125  | 0.009765625  | 0.01171875  | 0.013671875  |
+| **0 0001 …** | 0.015625  | 0.017578125  | 0.01953125  | 0.021484375  | 0.0234375  | 0.025390625  | 0.02734375  | 0.029296875  |
+| **0 0010 …** | 0.03125   | 0.03515625   | 0.0390625   | 0.04296875   | 0.046875   | 0.05078125   | 0.0546875   | 0.05859375   |
+| **0 0011 …** | 0.0625    | 0.0703125    | 0.078125    | 0.0859375    | 0.09375    | 0.1015625    | 0.109375    | 0.1171875    |
+| **0 0100 …** | 0.125     | 0.140625     | 0.15625     | 0.171875     | 0.1875     | 0.203125     | 0.21875     | 0.234375     |
+| **0 0101 …** | 0.25      | 0.28125      | 0.3125      | 0.34375      | 0.375      | 0.40625      | 0.4375      | 0.46875      |
+| **0 0110 …** | 0.5       | 0.5625       | 0.625       | 0.6875       | 0.75       | 0.8125       | 0.875       | 0.9375       |
+| **0 0111 …** | 1         | 1.125        | 1.25        | 1.375        | 1.5        | 1.625        | 1.75        | 1.875        |
+| **0 1000 …** | 2         | 2.25         | 2.5         | 2.75         | 3          | 3.25         | 3.5         | 3.75         |
+| **0 1001 …** | 4         | 4.5          | 5           | 5.5          | 6          | 6.5          | 7           | 7.5          |
+| **0 1010 …** | 8         | 9            | 10          | 11           | 12         | 13           | 14          | 15           |
+| **0 1011 …** | 16        | 18           | 20          | 22           | 24         | 26           | 28          | 30           |
+| **0 1100 …** | 32        | 36           | 40          | 44           | 48         | 52           | 56          | 60           |
+| **0 1101 …** | 64        | 72           | 80          | 88           | 96         | 104          | 112         | 120          |
+| **0 1110 …** | 128       | 144          | 160         | 176          | 192        | 208          | 224         | 240          |
+| **0 1111 …** | Inf       | NaN          | NaN         | NaN          | NaN        | NaN          | NaN         | NaN          |
+| **1 0000 …** | −0        | −0.001953125 | −0.00390625 | −0.005859375 | −0.0078125 | −0.009765625 | −0.01171875 | −0.013671875 |
+| **1 0001 …** | −0.015625 | −0.017578125 | −0.01953125 | −0.021484375 | −0.0234375 | −0.025390625 | −0.02734375 | −0.029296875 |
+| **1 0010 …** | −0.03125  | −0.03515625  | −0.0390625  | −0.04296875  | −0.046875  | −0.05078125  | −0.0546875  | −0.05859375  |
+| **1 0011 …** | −0.0625   | −0.0703125   | −0.078125   | −0.0859375   | −0.09375   | −0.1015625   | −0.109375   | −0.1171875   |
+| **1 0100 …** | −0.125    | −0.140625    | −0.15625    | −0.171875    | −0.1875    | −0.203125    | −0.21875    | −0.234375    |
+| **1 0101 …** | −0.25     | −0.28125     | −0.3125     | −0.34375     | −0.375     | −0.40625     | −0.4375     | −0.46875     |
+| **1 0110 …** | −0.5      | −0.5625      | −0.625      | −0.6875      | −0.75      | −0.8125      | −0.875      | −0.9375      |
+| **1 0111 …** | −1        | −1.125       | −1.25       | −1.375       | −1.5       | −1.625       | −1.75       | −1.875       |
+| **1 1000 …** | −2        | −2.25        | −2.5        | −2.75        | −3         | −3.25        | −3.5        | −3.75        |
+| **1 1001 …** | −4        | −4.5         | −5          | −5.5         | −6         | −6.5         | −7          | −7.5         |
+| **1 1010 …** | −8        | −9           | −10         | −11          | −12        | −13          | −14         | −15          |
+| **1 1011 …** | −16       | −18          | −20         | −22          | −24        | −26          | −28         | −30          |
+| **1 1100 …** | −32       | −36          | −40         | −44          | −48        | −52          | −56         | −60          |
+| **1 1101 …** | −64       | −72          | −80         | −88          | −96        | −104         | −112        | −120         |
+| **1 1110 …** | −128      | −144         | −160        | −176         | −192       | −208         | −224        | −240         |
+| **1 1111 …** | −Inf      | NaN          | NaN         | NaN          | NaN        | NaN          | NaN         | NaN          |
+
+
+## Notes
+
+I read about Tinytapeout 3 Days before Tapeout 05, so this was done in 2 nights. The code is far from perfect and maybe there are some bugs. But i wanted to test a Tapeout before developing a Risc V MCU for Tapeout 06.

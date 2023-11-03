@@ -13,7 +13,7 @@ project:
   tiles: "1x1"    # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2 or 8x2
 
 # Keep a track of the submission yaml
-yaml_version: 1
+yaml_version: 4
 
 # As everyone will have access to all designs, try to make it easy for someone new to your design to know what
 # it does and how to operate it. This info will be automatically collected and used to make a datasheet for the chip.
@@ -31,15 +31,17 @@ documentation:
       The two Floats use the 8 Bit Input and the 8 Bit bidirectional Input.
       1 Bit Sign, 4 Bit Exponent, 3 Bit Mantissa.
 
+      (I read about Tinytapeout 3 Days before Tapeout 05, so this was done in 2 nights. The code is far from perfect and maybe there are some bugs. But i wanted to test a Tapeout before developing a Risc V MCU for Tapeout 06.)
+
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
       Every clock the output should give the Addition of the two Floats.
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
-    - a_sign = ui_in[7]
-    - a_expo = ui_in[6:3]
-    - a_mant = ui_in[2:0]
+    - a_sign[1]   = ui_in[7]
+    - a_expo[3:0] = ui_in[6:3]
+    - a_mant[2:0] = ui_in[2:0]
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
     - uo_out[7]   = sign
@@ -47,9 +49,9 @@ documentation:
     - uo_out[6:3] = expo
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
-    - b_sign = uio_in[7]
-    - b_expo = uio_in[6:3]
-    - b_mant = uio_in[2:0]
+    - b_sign[1]   = uio_in[7]
+    - b_expo[3:0] = uio_in[6:3]
+    - b_mant[2:0] = uio_in[2:0]
 
 # The following fields are optional
   tag:          "alu, calculator"      # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
