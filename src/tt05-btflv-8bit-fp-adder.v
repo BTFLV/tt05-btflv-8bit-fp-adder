@@ -39,8 +39,6 @@ assign a_mant[2:0] = ui_in[2:0];
 assign b_mant[2:0] = uio_in[2:0];
 assign a_mant[3] = 1'b1;
 assign b_mant[3] = 1'b1;
-assign a_mant[3] = 1'b1;
-assign b_mant[3] = 1'b1;
 assign x_sign    = a_sign ^ b_sign;
 
 assign uo_out = o_floa;
@@ -52,7 +50,7 @@ begin
 		l_expo = a_expo;
 		s_expo = b_expo;
 		l_mant[6:3] = a_mant;
-		l_mant[2:0] = 3'b000;
+		l_mant[2:0] = (x_sign) ? 3'b000 : 3'b100;
 		s_mant = ((b_mant << 3) + ((x_sign) ? 3'b000 : 3'b100)) >> (l_expo - s_expo);
 		o_sign = a_sign;
 	end
@@ -61,7 +59,7 @@ begin
 		l_expo = b_expo;
 		s_expo = a_expo;
 		l_mant[6:3] = b_mant;
-		l_mant[2:0] = 3'b000;
+		l_mant[2:0] = (x_sign) ? 3'b000 : 3'b100;
 		s_mant = ((a_mant << 3) + ((x_sign) ? 3'b000 : 3'b100)) >> (l_expo - s_expo);
 		o_sign = b_sign;
 	end
