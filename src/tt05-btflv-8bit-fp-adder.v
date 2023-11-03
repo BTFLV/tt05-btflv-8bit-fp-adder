@@ -21,9 +21,9 @@ wire [3:0] b_mant;
 
 reg [3:0] l_expo;
 reg [3:0] s_expo;
-reg [3:0] l_mant;
-reg [3:0] s_mant;
-reg [4:0] c_mant;
+reg [6:0] l_mant;
+reg [6:0] s_mant;
+reg [7:0] c_mant;
 reg [5:0] g_mant;
 reg [3:0] o_expo;
 reg [2:0] o_mant;
@@ -43,20 +43,22 @@ assign uo_out = o_floa;
 
 always @*
 begin
+	l_mant[2:0] = 3'b000;
+	s_mant[2:0] = 3'b000;
 	if (a_expo > b_expo)
 	begin
 		l_expo = a_expo;
 		s_expo = b_expo;
-		l_mant = a_mant;
-		s_mant = b_mant >> (l_expo - s_expo);
+		l_mant[6:3] = a_mant;
+		s_mant = (b_mant << 3) >> (l_expo - s_expo);
 		o_sign = a_sign;
 	end
 	else if (a_expo < b_expo)
 	begin
 		l_expo = b_expo;
 		s_expo = a_expo;
-		l_mant = b_mant;
-		s_mant = a_mant >> (l_expo - s_expo);
+		l_mant[6:3] = b_mant;
+		s_mant = (a_mant << 3) >> (l_expo - s_expo);
 		o_sign = b_sign;
 	end
 	else
@@ -65,24 +67,39 @@ begin
 		begin
 			l_expo = a_expo;
 			s_expo = b_expo;
-			l_mant = a_mant;
-			s_mant = b_mant;
+			l_mant[6:3] = a_mant;
+			s_mant[6:3] = b_mant;
 			o_sign = a_sign;
 		end
 		else
 		begin
 			l_expo = b_expo;
 			s_expo = a_expo;
-			l_mant = b_mant;
-			s_mant = a_mant;
+			l_mant[6:3] = b_mant;
+			s_mant[6:3] = a_mant;
 			o_sign = b_sign;
 		end
 	end
 	
-	c_mant = (a_sign ^ b_sign) ? (l_mant - s_mant) : (l_mant + s_mant);
-	g_mant = c_mant + 1;
+	if(a_mant > b_mant)
+	begin
+	end
+	else
+	begin
+	end
 	
-	if (c_mant[4] || g_mant[5])
+	if(a_sign ^ b_sign)
+	begin
+		c_mant = (l_mant > s_mant) ? l_mant - s_mant  + 3'b100 : s_mant - l_mant  + 3'b100;
+	end
+	else
+	begin
+		c_mant = l_mant + s_mant + 3'b100;
+	end
+	
+	g_mant = c_mant[7:3] + 1;
+	
+	if ((c_mant[7] || g_mant[5]) && !(a_sign ^ b_sign))
 	begin
 		if (g_mant[5])
 		begin
@@ -101,7 +118,7 @@ begin
 		begin
 			if (l_expo < 4'b1110)
 			begin
-				o_mant = g_mant[3:1];
+				o_mant = c_mant[6:4];
 				o_expo = l_expo + 1;
 			end
 			else
@@ -111,24 +128,24 @@ begin
 			end
 		end
 	end
+	else if (c_mant[6])
+	begin
+		o_mant = c_mant[5:3];
+		o_expo = l_expo;
+	end
+	else if (c_mant[5])
+	begin
+		o_mant = c_mant[4:2];
+		o_expo = l_expo - 1;
+	end
+	else if (c_mant[4])
+	begin
+		o_mant = c_mant[3:1];
+		o_expo = l_expo - 2;
+	end
 	else if (c_mant[3])
 	begin
 		o_mant = c_mant[2:0];
-		o_expo = l_expo;
-	end
-	else if (c_mant[2])
-	begin
-		o_mant = c_mant[2:0] << 1;
-		o_expo = l_expo - 1;
-	end
-	else if (c_mant[1])
-	begin
-		o_mant = c_mant[2:0] << 2;
-		o_expo = l_expo - 2;
-	end
-	else if (c_mant[0])
-	begin
-		o_mant = c_mant[2:0] << 3;
 		o_expo = l_expo - 3;
 	end
 	else

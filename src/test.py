@@ -20,9 +20,6 @@ async def test_btflv_8bit_fp_adder(dut):
     dut._log.info("Checking 2.75 - 4")
     await ClockCycles(dut.clk, 10)
     dut._log.info(dut.uo_out.value)
-    dut._log.info(type(dut))
-    dut._log.info(type(dut.uo_out))
-    dut._log.info(type(dut.uo_out.value))
     assert int(dut.uo_out.value) == 186
 
     await ClockCycles(dut.clk, 10)
