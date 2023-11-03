@@ -23,7 +23,7 @@ reg [3:0] l_expo;
 reg [3:0] s_expo;
 reg [6:0] l_mant;
 reg [6:0] s_mant;
-reg [7:0] c_mant;
+reg [8:0] c_mant;
 reg [5:0] g_mant;
 reg [3:0] o_expo;
 reg [2:0] o_mant;
@@ -38,19 +38,23 @@ assign a_mant[2:0] = ui_in[2:0];
 assign b_mant[2:0] = uio_in[2:0];
 assign a_mant[3] = 1'b1;
 assign b_mant[3] = 1'b1;
+assign a_mant[3] = 1'b1;
+assign b_mant[3] = 1'b1;
 
 assign uo_out = o_floa;
 
 always @*
 begin
-	l_mant[2:0] = 3'b000;
-	s_mant[2:0] = 3'b000;
+	l_mant[2:0] = 3'b100;
+	s_mant[2:0] = 3'b100;
+	c_mant[8] = 1'b0;
+	
 	if (a_expo > b_expo)
 	begin
 		l_expo = a_expo;
 		s_expo = b_expo;
 		l_mant[6:3] = a_mant;
-		s_mant = (b_mant << 3) >> (l_expo - s_expo);
+		s_mant = ((b_mant << 3) + 3'b100) >> (l_expo - s_expo);
 		o_sign = a_sign;
 	end
 	else if (a_expo < b_expo)
@@ -58,7 +62,7 @@ begin
 		l_expo = b_expo;
 		s_expo = a_expo;
 		l_mant[6:3] = b_mant;
-		s_mant = (a_mant << 3) >> (l_expo - s_expo);
+		s_mant = ((a_mant << 3) + 3'b100) >> (l_expo - s_expo);
 		o_sign = b_sign;
 	end
 	else
@@ -94,18 +98,16 @@ begin
 	end
 	else
 	begin
-		c_mant = l_mant + s_mant + 3'b100;
+		c_mant = l_mant + s_mant;
 	end
 	
-	g_mant = c_mant[7:3] + 1;
-	
-	if ((c_mant[7] || g_mant[5]) && !(a_sign ^ b_sign))
+	if ((c_mant[7] || c_mant[8]) && !(a_sign ^ b_sign))
 	begin
-		if (g_mant[5])
+		if (c_mant[8])
 		begin
-			if (l_expo < 4'b1101)
+			if (l_expo < 4'b1110)
 			begin
-				o_mant = g_mant[4:2];
+				o_mant = c_mant[4:2];
 				o_expo = l_expo + 2;
 			end
 			else
@@ -116,7 +118,7 @@ begin
 		end
 		else
 		begin
-			if (l_expo < 4'b1110)
+			if (l_expo < 4'b1111)
 			begin
 				o_mant = c_mant[6:4];
 				o_expo = l_expo + 1;
@@ -161,16 +163,14 @@ begin
 	begin
 		o_floa <= 8'd0;
 	end
-	else if (a_expo == 4'b1111 || b_expo == 4'b1111)
+	else if ((a_expo == 4'b1111 && a_mant[2:0] != 3'b000) || (b_expo == 4'b1111 && b_mant[2:0] != 3'b000))
 	begin
-		if (a_mant[2:0] != 3'b000 || b_mant[2:0] != 3'b000)
-		begin
-			o_floa[7:0] <= 8'b01111000;
-		end
-		else
-		begin
-			o_floa[7:0] <= 8'b01111111;
-		end
+		o_floa[7:0] <= 8'b01111111;
+	end
+	else if ((a_expo == 4'b1111 && a_mant[2:0] == 3'b000) || (b_expo == 4'b1111 && b_mant[2:0] == 3'b000))
+	begin
+		o_floa[6:0] <= 7'b1111000;
+		o_floa[7]   <= o_sign;
 	end
 	else
 	begin
