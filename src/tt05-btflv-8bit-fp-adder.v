@@ -140,7 +140,7 @@ end
 
 always @(posedge clk)
 begin
-	if (!rst_n)
+	if (!rst_n || !ena)
 	begin
 		o_floa <= 8'd0;
 	end
@@ -155,15 +155,11 @@ begin
 			o_floa[7:0] <= 8'b01111111;
 		end
 	end
-	else if (ena)
+	else
 	begin
 		o_floa[6:3] <= o_expo;
 		o_floa[2:0] <= o_mant;
 		o_floa[7]   <= o_sign;
-	end
-	else
-	begin
-		o_floa <= 8'd0;
 	end
 end
 
