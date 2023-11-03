@@ -21,17 +21,15 @@ yaml_version: 4
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
   author:       "Philip Mohr"      # Your name
-  title:        "8 bit floating point adder for Tiny Tapeout 05"      # Project title
+  title:        "8 bit floating point adder"      # Project title
   language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  "Adds 2 8 Bit floating point numbers under consideration of rounding and infinity cases"      # Short description of what your project does
+  description:  "Adds two 8 Bit floating point numbers"      # Short description of what your project does
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Adds 2 8 bit floating point numbers under consideration of rounding and infinity cases.
+      Adds two 8 bit floating point numbers under consideration of rounding and infinity cases.
       The two floats use the 8 bit input and the 8 bit bidirectional input.
       1 bit sign, 4 bit exponent, 3 bit mantissa.
-
-      (I read about Tinytapeout 3 days before Tapeout 05, so this was done in 2 nights. The code is far from perfect and maybe there are some edge case bugs. But i wanted to test a tapeout before developing a Risc V MCU for Tapeout 06.)
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
